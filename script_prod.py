@@ -24,8 +24,10 @@ xgb_model = joblib.load(xgb_model_filename)
 # Leer el archivo test.csv
 test_df = pd.read_csv('data/test.csv')
 
-# Seleccionar las características necesarias (asegúrate de que las columnas coincidan con el entrenamiento)
-features = test_df.columns.tolist()  # Ajusta según sea necesario
+# Seleccionar las características necesarias excluyendo la columna 'id'
+# Asumiendo que la columna 'id' es la primera columna
+features = test_df.columns.tolist()
+features.remove('id')
 
 # Predecir usando el modelo DecisionTree
 dt_predictions = dt_model.predict(test_df[features])
@@ -35,7 +37,7 @@ test_df['dt_predictions'] = dt_predictions
 xgb_predictions = xgb_model.predict(test_df[features])
 test_df['xgb_predictions'] = xgb_predictions
 
-# Guardar el DataFrame con las predicciones
+# Guardar el DataFrame con las predicciones, incluyendo la columna 'id'
 output_filename = f'{output_dir}/predictions_{current_date}.csv'
 test_df.to_csv(output_filename, index=False)
 
